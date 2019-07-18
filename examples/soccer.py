@@ -3,10 +3,18 @@ from enum import Enum
 from random import random
 from time import sleep, time
 
-from tomotoio.data import Motion, PositionID
+from tomotoio.data import Motion, Note, PositionID
 from tomotoio.geo import Vector, angleDiff, direction
 from tomotoio.navigator import NavigationCommandBase, RotateCommand
 from utils import createCubes, createNavigators
+
+BALL_KICKED_SOUND = [Note(90, 0.05), Note(87, 0.05), Note(84, 0.05)]
+BALL_STOP_SOUND = [Note(83, 0.05)]
+PLAYER_MOVE_SOUND = [
+    [Note(70, 0.05), Note(73, 0.05), Note(Note.REST, 0.4)],
+    [Note(68, 0.05), Note(71, 0.05), Note(Note.REST, 0.4)]
+]
+PLAYER_BACK_SOUND = [Note(76, 0.05), Note(82, 0.05)]
 
 
 class BallCommand(NavigationCommandBase):
@@ -28,13 +36,14 @@ class BallCommand(NavigationCommandBase):
                 if self.positionBeforeKicked:
                     v = Vector(self.positionBeforeKicked[0], e)
                     dt = time() - self.positionBeforeKicked[1]
-                    if dt > 0.1:
+                    if dt > 0.2:
                         k = v.magnitude() / dt
                         if k > 7 and time() - self.releaseTime > 0.2:
                             self.positionBeforeKicked = None
                             self.vector = v * (10 + 2 / dt)
                             self.rotateCommand = RotateCommand(self.nav, direction(v.x, v.y), 10)
                             self.state = self.State.ROTATE
+                            self.nav.cube.setMusic(BALL_KICKED_SOUND, 1)
                             log.debug("BALL: trans to ROTATE")
                         else:
                             self.positionBeforeKicked = (e, time())
@@ -59,6 +68,7 @@ class BallCommand(NavigationCommandBase):
                 self.nav.cube.setMotor(0, 0)
                 self.state = self.State.STANDBY
                 self.releaseTime = time()
+                self.nav.cube.setMusic(BALL_STOP_SOUND, 1)
                 log.debug("BALL: trans to STANDBY")
 
 
@@ -70,6 +80,7 @@ ball.setCommand(BallCommand(ball))
 
 try:
     playerTrace = list()
+    moveSound = 0
     while True:
         sleep(0.1)
         if ball.lastPosition and player.lastPosition:
@@ -84,6 +95,8 @@ try:
                     player.circle(bp.x, bp.y, 30)
                 else:
                     player.move(bp.x, bp.y, fixedSpeed=100, moveRotateThreshold=30, tolerance=20)
+                    player.cube.setMusic(PLAYER_MOVE_SOUND[moveSound], 0)
+                    moveSound = (moveSound + 1) % len(PLAYER_MOVE_SOUND)
 
                     playerTrace.append(bp)
                     if len(playerTrace) > 20:
@@ -92,7 +105,8 @@ try:
                         dy = max([p.y for p in playerTrace]) - min([p.y for p in playerTrace])
                         if dx < 5 and dy < 5:
                             player.setCommand(None)
-                            player.cube.setMotor(-50, -50, 0.2)
+                            player.cube.setMotor(-60, -60, 0.2)
+                            player.cube.setMusic(PLAYER_BACK_SOUND, 5)
                             sleep(0.2)
                             playerTrace = list()
 
