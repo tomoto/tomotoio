@@ -6,7 +6,7 @@ from .data import PositionID
 from .geo import *
 
 MILLIS_PER_UNIT = 560 / 410
-WHEELBASE_UNITS = 26.6 / MILLIS_PER_UNIT
+AXLE_TRACK_UNITS = 26.6 / MILLIS_PER_UNIT
 MOTOR_DURATION = 1.5
 
 
@@ -32,7 +32,7 @@ def calcMoveSpeed(distance, da, currentSpeed, maxSpeed, fixedSpeed):
 
     if abs(da) > 0.01:
         rc = distance / 2 / sin(radians(abs(da)))
-        k = max((rc + WHEELBASE_UNITS / 2) / (rc - WHEELBASE_UNITS / 2), 0)
+        k = max((rc + AXLE_TRACK_UNITS / 2) / (rc - AXLE_TRACK_UNITS / 2), 0)
     else:
         k = 1
 
@@ -193,7 +193,7 @@ class Navigator:
         if isinstance(self.command, MoveCommand):
             self.command.updateTarget(targetX, targetY, tolerance, moveRotateThreshold=moveRotateThreshold, fixedSpeed=fixedSpeed)
         else:
-            self.setCommand(MoveCommand(self, targetX, targetY, tolerance=tolerance, moveRotateThreshold=moveRotateThreshold))
+            self.setCommand(MoveCommand(self, targetX, targetY, tolerance=tolerance, moveRotateThreshold=moveRotateThreshold, fixedSpeed=fixedSpeed))
 
     def rotate(self, targetAngle, tolerance):
         if isinstance(self.command, RotateCommand):
