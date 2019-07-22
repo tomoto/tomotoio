@@ -2,6 +2,8 @@
 
 My test project playing with Sony Toio. See https://www.sony.net/SonyInfo/design/stories/toio/.
 
+This runs on Linux with Python 3.6 or later. I am personally running this on Raspberry Pi 4 + Stretch.
+
 # Getting Started
 
 1. Install the package with `pip`. If you want to just try, `pip install -e .` at the root directory will be convenient.
@@ -14,6 +16,7 @@ My test project playing with Sony Toio. See https://www.sony.net/SonyInfo/design
 
 * simple.py: Just connects to cubes, identifies themselves with sounds and lights, then disconnects
 * soundeffects.py: Beep the sound effects from #0 to #10
+* notifications.py: Outputs the notifications (positions, button states, motions) to the console.
 * rotate.py: Cube #1 rotates to the direction of cube #2
 * symmetric.py: Cube #1 moves to the point-symmetric position of cube #2
 * circle.py: Cube #1 moves circularly assuming cube #2 as the center

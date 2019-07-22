@@ -1,7 +1,7 @@
 from time import sleep
 
 from tomotoio.navigator import Mat
-from utils import createNavigators, createCubes
+from utils import createCubes, createNavigators, releaseCubes
 
 cubes = createCubes()
 navs = createNavigators(cubes)
@@ -24,4 +24,4 @@ try:
             chaser.cube.setSoundEffect(6 if isComplete else 3)
 
 finally:
-    cubes.release()
+    releaseCubes(cubes)

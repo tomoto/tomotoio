@@ -2,11 +2,12 @@ import logging as log
 from enum import Enum
 from random import random
 from time import sleep, time
+from typing import cast
 
 from tomotoio.data import Motion, Note, PositionID
-from tomotoio.geo import Vector, angleDiff, direction
+from tomotoio.geo import Vector
 from tomotoio.navigator import NavigationCommandBase, RotateCommand
-from utils import createCubes, createNavigators
+from utils import createCubes, createNavigators, releaseCubes
 
 BALL_KICKED_SOUND = [Note(90, 0.05), Note(87, 0.05), Note(84, 0.05)]
 BALL_STOP_SOUND = [Note(83, 0.05)]
@@ -41,7 +42,7 @@ class BallCommand(NavigationCommandBase):
                         if k > 7 and time() - self.releaseTime > 0.2:
                             self.positionBeforeKicked = None
                             self.vector = v * (10 + 2 / dt)
-                            self.rotateCommand = RotateCommand(self.nav, direction(v.x, v.y), 10)
+                            self.rotateCommand = RotateCommand(self.nav, v.direction(), 10)
                             self.state = self.State.ROTATE
                             self.nav.cube.setMusic(BALL_KICKED_SOUND, 1)
                             log.debug("BALL: trans to ROTATE")
@@ -74,7 +75,7 @@ class BallCommand(NavigationCommandBase):
 
 cubes = createCubes()
 navs = createNavigators(cubes)
-(player, ball) = navs
+(player, ball) = (navs[0], navs[1])
 
 ball.setCommand(BallCommand(ball))
 
@@ -87,14 +88,14 @@ try:
             bp = Vector(ball.lastPosition)
             pp = Vector(player.lastPosition)
             bpp = pp - bp
-            if ball.command.state == BallCommand.State.STANDBY:
+            if cast(BallCommand, ball.command).state == BallCommand.State.STANDBY:
                 cbp = bp - ball.mat.center
                 m = ball.mat.margin(bp.x, bp.y)
-                a = abs(angleDiff(direction(cbp.x, cbp.y) - direction(bpp.x, bpp.y)))
+                a = abs(bpp.angle(cbp))
                 if m < 100 and a > 45:
                     player.circle(bp.x, bp.y, 30)
                 else:
-                    player.move(bp.x, bp.y, fixedSpeed=100, moveRotateThreshold=30, tolerance=20)
+                    player.move(bp.x, bp.y, 20, fixedSpeed=True, moveRotateThreshold=30)
                     player.cube.setMusic(PLAYER_MOVE_SOUND[moveSound], 0)
                     moveSound = (moveSound + 1) % len(PLAYER_MOVE_SOUND)
 
@@ -118,4 +119,4 @@ try:
 
 finally:
     # Disconnect
-    cubes.release()
+    releaseCubes(cubes)

@@ -1,12 +1,15 @@
 import logging as log
 from time import sleep
+from typing import Iterable, List
 
+from tomotoio.cube import Cube
 from tomotoio.data import Light, Note
 from tomotoio.factory import createCubesFromFile
 from tomotoio.navigator import Navigator
 
 
-def createCubes(logLevel=log.DEBUG, cubesFile="toio-cubes.txt", initialReport=True, iface=0):
+def createCubes(logLevel: int = log.DEBUG, cubesFile: str = "toio-cubes.txt",
+                initialReport: bool = True, iface: int = 0) -> List[Cube]:
     log.basicConfig(level=logLevel)
 
     cubes = createCubesFromFile(cubesFile, iface=iface)
@@ -19,7 +22,7 @@ def createCubes(logLevel=log.DEBUG, cubesFile="toio-cubes.txt", initialReport=Tr
     return cubes
 
 
-def runInitialReport(cubes):
+def runInitialReport(cubes: Iterable[Cube]):
     onDuration = 0.2
     offDuration = 0.1
     repeat = 3
@@ -37,5 +40,10 @@ def runInitialReport(cubes):
         sleep(1)
 
 
-def createNavigators(cubes):
+def createNavigators(cubes: Iterable[Cube]) -> List[Navigator]:
     return [Navigator(c) for c in cubes]
+
+
+def releaseCubes(cubes: Iterable[Cube]):
+    for c in cubes:
+        c.release()

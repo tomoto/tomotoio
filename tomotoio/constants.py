@@ -2,8 +2,12 @@ from bluepy.btle import UUID
 
 
 class UUIDs:
+    """UUIDs defined for the services and characteristics for Toio."""
+
+    # Service UUID
     SERVICE = UUID("10B20100-5B3B-4571-9508-CF3EFCD7BBAE")
 
+    # Characteristic UUIDs
     TOIO_ID = UUID("10B20101-5B3B-4571-9508-CF3EFCD7BBAE")
     MOTOR = UUID("10B20102-5B3B-4571-9508-CF3EFCD7BBAE")
     LIGHT = UUID("10B20103-5B3B-4571-9508-CF3EFCD7BBAE")
@@ -15,7 +19,9 @@ class UUIDs:
 
 
 class Handles:
-    # Assume the handles are constant
+    """Characteristic handles defined for Toio."""
+
+    # Note we assume these values are static and never change.
     TOIO_ID = 0x000d
     MOTOR = 0x0011
     LIGHT = 0x0014

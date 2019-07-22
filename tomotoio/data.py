@@ -8,7 +8,7 @@ class ToioIDType(Enum):
 
 
 class ToioID:
-    def __init__(self, type):
+    def __init__(self, type: ToioIDType):
         self.type = type
 
     def isPosition(self):
@@ -25,7 +25,7 @@ class ToioID:
 
 
 class PositionID(ToioID):
-    def __init__(self, x, y, angle, sensorX, sensorY, sensorAngle):
+    def __init__(self, x: float, y: float, angle: float, sensorX: float, sensorY: float, sensorAngle: float):
         super().__init__(ToioIDType.POSITION)
         self.x = x
         self.y = y
@@ -36,21 +36,20 @@ class PositionID(ToioID):
 
 
 class StandardID(ToioID):
-    def __init__(self, value, angle):
+    def __init__(self, value: float, angle: float):
         super().__init__(ToioIDType.STANDARD)
-        self.type = ToioIDType.STANDARD
         self.value = value
         self.angle = angle
 
 
 class MissedID(ToioID):
-    def __init__(self, fromType):
+    def __init__(self, fromType: ToioIDType):
         super().__init__(ToioIDType.MISSED)
         self.fromType = fromType
 
 
 class Motion:
-    def __init__(self, isLevel, collision):
+    def __init__(self, isLevel: bool, collision: bool):
         self.isLevel = isLevel
         self.collision = collision
 
@@ -59,7 +58,7 @@ class Motion:
 
 
 class Light:
-    def __init__(self, r, g, b, duration):
+    def __init__(self, r: int, g: int, b: int, duration: float):
         self.r = r
         self.g = g
         self.b = b
@@ -69,7 +68,7 @@ class Light:
 class Note:
     REST = 128
 
-    def __init__(self, noteNumber, duration, volume=255):
+    def __init__(self, noteNumber: int, duration: float, volume: int = 255):
         self.noteNumber = noteNumber
         self.duration = duration
         self.volume = volume

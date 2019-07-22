@@ -1,10 +1,11 @@
 import argparse
 import logging as log
 import sys
+from typing import List
 
 from bluepy.btle import UUID, DefaultDelegate, Scanner
 
-from tomotoio.constants import UUIDs
+from .constants import UUIDs
 
 
 class DebugScanDelegate(DefaultDelegate):
@@ -24,7 +25,7 @@ class DebugScanDelegate(DefaultDelegate):
             log.debug("  %s (%d): %s" % (desc, adtype, value))
 
 
-def scanCubes(timeout, iface=0):
+def scanCubes(timeout: float, iface: int = 0) -> List[str]:
     result = list()
     scanner = Scanner(iface).withDelegate(DebugScanDelegate())
     devices = scanner.scan(timeout)

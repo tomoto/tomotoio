@@ -1,9 +1,9 @@
-from time import sleep
-from math import hypot
 import logging as log
+from math import hypot
+from time import sleep
 
-from utils import createCubes, createNavigators
 from tomotoio.geo import Vector
+from utils import createCubes, createNavigators, releaseCubes
 
 cubes = createCubes()
 navs = createNavigators(cubes)
@@ -15,7 +15,7 @@ center = None
 try:
     while True:
         sleep(0.1)
-        
+
         (cp, tp) = (chaser.lastPosition, target.lastPosition)
         if cp and tp:
             if center is None or Vector(center, tp).magnitude() > 10:
@@ -24,4 +24,4 @@ try:
                 chaser.cube.setSoundEffect(3)
 
 finally:
-    cubes.release()
+    releaseCubes(cubes)

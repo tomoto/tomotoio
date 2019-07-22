@@ -1,7 +1,7 @@
 import logging as log
 from time import sleep
 
-from utils import createCubes
+from utils import createCubes, releaseCubes
 
 # Identify each cube by the color and the sound signal,
 # and report the battery level on the console.
@@ -17,4 +17,4 @@ try:
 
 finally:
     # Disconnect
-    cubes.release()
+    releaseCubes(cubes)

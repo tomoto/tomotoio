@@ -8,5 +8,6 @@ setuptools.setup(
     author_email="tomoto@gmail.com",
     description="Playing with TOIO",
     packages=setuptools.find_packages(exclude=("examples")),
+    python_requires='>3.6',
     install_requires=['bluepy >= 1.3.0']
 )

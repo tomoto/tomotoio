@@ -1,15 +1,16 @@
 import sys
+from typing import List
 
 from .blepeer import BlePeer
-from .cube import Cube, Cubes
+from .cube import Cube
 
 
-def createCube(address, iface=0):
-    return Cube(BlePeer(address, iface))
+def createCube(address: str, name: str = None, iface: int = 0) -> Cube:
+    return Cube(BlePeer(address, iface), name if name else address)
 
 
-def createCubesFromFile(addressesFile=None, iface=0):
-    def readAddresses(f):
+def createCubesFromFile(addressesFile: str = None, iface: int = 0) -> List[Cube]:
+    def readAddresses(f) -> List[str]:
         return [s.strip() for s in f.readlines()]
 
     if addressesFile:
@@ -18,4 +19,4 @@ def createCubesFromFile(addressesFile=None, iface=0):
     else:
         addresses = readAddresses(sys.stdin)
 
-    return Cubes([createCube(a, iface) for a in addresses])
+    return [createCube(a, "Cube #%d" % i, iface) for i, a in enumerate(addresses, 1)]
