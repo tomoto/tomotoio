@@ -5,7 +5,7 @@ from typing import List
 
 from bluepy.btle import UUID, DefaultDelegate, Scanner
 
-from .constants import UUIDs
+from tomotoio.constants import UUIDs
 
 
 class DebugScanDelegate(DefaultDelegate):
