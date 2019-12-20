@@ -32,7 +32,7 @@ def decodeMotion(data: bytes) -> Motion:
     if data[0] == 0x01:
         if len(data) == 3:
             (_, isLevel, collision) = unpack("<BBB", data)
-            return Motion(isLevel != 0, collision != 0, 0, 0)
+            return Motion(isLevel != 0, collision != 0, False, Orientation.INVALID)
         else:
             (_, isLevel, collision, doubleTap, orientation) = unpack("<BBBBB", data)
             return Motion(isLevel != 0, collision != 0, doubleTap != 0, Orientation(orientation))
@@ -102,8 +102,11 @@ def decodeConfigProtocolVersionResponse(data: bytes) -> str:
 
 
 def encodeConfigLevelThreshold(angle: int = 45) -> bytes:
-    return bytes([5, min(angle, 45)])
+    return bytes([5, 0, min(angle, 45)])
 
 
 def encodeConfigCollisionThreshold(value: int = 7) -> bytes:
-    return bytes([6, min(value, 10)])
+    return bytes([6, 0, min(value, 10)])
+
+def encodeConfigDoubleTapTiming(value: int = 5) -> bytes:
+    return bytes([0x17, 0, min(value, 7)])

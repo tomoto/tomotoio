@@ -112,3 +112,6 @@ class Cube:
 
     def setConfigLevelThreshold(self, angle: int):
         self._write(UUIDs.CONFIG, encodeConfigLevelThreshold(angle))
+
+    def setConfigDoubleTapTiming(self, value: int):
+        self._write(UUIDs.CONFIG, encodeConfigDoubleTapTiming(value))
