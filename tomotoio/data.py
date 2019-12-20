@@ -2,6 +2,7 @@ from enum import Enum
 
 
 class ToioIDType(Enum):
+    INVALID = 0
     POSITION = 1
     STANDARD = 2
     MISSED = 3
@@ -47,11 +48,21 @@ class MissedID(ToioID):
         super().__init__(ToioIDType.MISSED)
         self.fromType = fromType
 
+class Orientation(Enum):
+    INVALID = 0
+    STRAIGHT_UP = 1
+    BOTTOM_UP = 2
+    BACK_UP = 3
+    FRONT_UP = 4
+    RIGHT_UP = 5
+    LEFT_UP = 6
 
 class Motion:
-    def __init__(self, isLevel: bool, collision: bool):
+    def __init__(self, isLevel: bool, collision: bool, doubleTap: bool, orientation: Orientation):
         self.isLevel = isLevel
         self.collision = collision
+        self.doubleTap = doubleTap
+        self.orientation = orientation
 
     def __str__(self):
         return str(vars(self))

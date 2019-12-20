@@ -2,6 +2,7 @@
 
 from struct import pack, unpack
 from typing import List, Union
+import logging
 
 from .data import *
 
@@ -17,19 +18,24 @@ def decodeToioID(data: bytes) -> Union[PositionID, StandardID, MissedID]:
     if data[0] == 0x02:
         (_, value, angle) = unpack("<BIH", data)
         return StandardID(value, angle)
-    else:
-        if data[0] == 0x03:
-            return MissedID(ToioIDType.POSITION)
-        elif data[0] == 0x04:
-            return MissedID(ToioIDType.STANDARD)
+    if data[0] == 0x03:
+        return MissedID(ToioIDType.POSITION)
+    if data[0] == 0x04:
+        return MissedID(ToioIDType.STANDARD)
+    if data[0] == 0xff:
+        return MissedID(ToioIDType.INVALID)
 
     raise _wrongBytesError(data)
 
 
 def decodeMotion(data: bytes) -> Motion:
     if data[0] == 0x01:
-        (_, isLevel, collision) = unpack("<BBB", data)
-        return Motion(isLevel != 0, collision != 0)
+        if len(data) == 3:
+            (_, isLevel, collision) = unpack("<BBB", data)
+            return Motion(isLevel != 0, collision != 0, 0, 0)
+        else:
+            (_, isLevel, collision, doubleTap, orientation) = unpack("<BBBBB", data)
+            return Motion(isLevel != 0, collision != 0, doubleTap != 0, Orientation(orientation))
 
     raise _wrongBytesError(data)
 

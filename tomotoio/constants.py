@@ -16,17 +16,3 @@ class UUIDs:
     BUTTON = UUID("10B20107-5B3B-4571-9508-CF3EFCD7BBAE")
     BATTERY = UUID("10B20108-5B3B-4571-9508-CF3EFCD7BBAE")
     CONFIG = UUID("10B201FF-5B3B-4571-9508-CF3EFCD7BBAE")
-
-
-class Handles:
-    """Characteristic handles defined for Toio."""
-
-    # Note we assume these values are static and never change.
-    TOIO_ID = 0x000d
-    MOTOR = 0x0011
-    LIGHT = 0x0014
-    SOUND = 0x0017
-    MOTION = 0x001a
-    BUTTON = 0x001e
-    BATTERY = 0x0022
-    CONFIG = 0x0026
